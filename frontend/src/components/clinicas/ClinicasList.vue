@@ -15,15 +15,23 @@
           <td>{{ clinica.nombre }}</td>
           <td>{{ clinica.correo_electronico }}</td>
           <td>{{ clinica.telefono }}</td>
-          <td>
-            <button @click="selectClinica(clinica)" title="Actualizar">
-              <i class="fa-regular fa-pen-to-square"></i>
+          <td class="d-flex buttons-crud">
+            <!-- Btn actualizar -->
+            <button type="button" @click="selectClinica(clinica)" title="Actualizar" class="btn button">
+              <i class="fa-regular fa-pen-to-square btn-update text-success"></i>
             </button>
-            <button @click="showDeleteModal(clinica)" title="Eliminar">
-              <i class="fa-regular fa-trash-can"></i> 
+
+            <!-- Btn Eliminar -->
+            <button type="button" @click="showDeleteModal(clinica)" title="Eliminar" class="btn button">
+              <i class="fa-regular fa-trash-can text-danger"></i> 
             </button>
+
+            <!-- Btn Ver Empleados de la Clinica -->
             <router-link
               :to="{ name: 'EmpleadosPorClinica', params: { id: clinica.id } }"
+              class="btn text-primary button"
+              title="Ver Empleados"
+
             >
               <i class="fa-regular fa-eye"></i> 
             </router-link>
@@ -37,8 +45,11 @@
       <p>
         ¿Estás seguro de eliminar la clínica <strong>"{{ selectedClinica?.nombre }}"</strong>?
       </p>
-      <b-button variant="danger" @click="deleteClinica">Eliminar</b-button>
-      <b-button variant="secondary" @click="closeModal">Cancelar</b-button>
+    
+      <div class="buttons d-flex gap-3">
+        <b-button variant="danger" @click="deleteClinica">Eliminar</b-button>
+        <b-button variant="secondary" @click="closeModal">Cancelar</b-button>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -93,5 +104,7 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos para el componente ClinicasList.vue */
+  .buttons-crud .button {
+      font-size: 1.1rem;
+  }
 </style>
