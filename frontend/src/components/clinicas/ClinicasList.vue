@@ -54,28 +54,22 @@
       </ul>
     </nav>
 
-    <!-- Modal de confirmación de eliminación -->
-    <b-modal v-model="showModal" title="Confirmar Eliminación" hide-footer>
-      <p>
-        ¿Estás seguro de eliminar la clínica <strong>"{{ selectedClinica?.nombre }}"</strong>?
-      </p>
-      <div class="buttons d-flex gap-3">
-        <b-button variant="danger" @click="deleteClinica">Eliminar</b-button>
-        <b-button variant="secondary" @click="closeModal">Cancelar</b-button>
-      </div>
-    </b-modal>
+    <!-- Componente de eliminación de clínica -->
+    <ClinicaDelete v-if="selectedClinica" :clinica="selectedClinica" @clinicaEliminada="handleClinicaEliminada" @closeModal="closeModal" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { BModal, BButton } from 'bootstrap-vue-next';
+import ClinicaDelete from './ClinicaDelete.vue';
 
 export default {
   name: "ClinicasList",
   components: {
-    BModal,
-    BButton,
+    ClinicaDelete,
+  },
+  props: {
+    clinicas: Array
   },
   data() {
     return {
@@ -89,6 +83,18 @@ export default {
       selectedClinica: null,
       showModal: false,
     };
+  },
+  watch: {
+    clinicas: {
+      handler(newClinicas) {
+        this.localClinicas.data = newClinicas.data || [];
+        this.localClinicas.current_page = newClinicas.current_page || 1;
+        this.localClinicas.last_page = newClinicas.last_page || 1;
+        this.localClinicas.next_page_url = newClinicas.next_page_url || null;
+        this.localClinicas.prev_page_url = newClinicas.prev_page_url || null;
+      },
+      immediate: true
+    }
   },
   methods: {
     async fetchClinicas(page = 1) {
@@ -122,16 +128,9 @@ export default {
       this.selectedClinica = clinica;
       this.showModal = true;
     },
-    async deleteClinica() {
-      try {
-        await axios.delete(`http://localhost:8000/api/clinicas/${this.selectedClinica.id}`);
-        this.$emit("clinicaEliminada", this.selectedClinica.id);
-        this.fetchClinicas(this.localClinicas.current_page);
-        this.closeModal();
-      } catch (error) {
-        console.error("Error deleting clinica:", error);
-        this.closeModal();
-      }
+    handleClinicaEliminada() {
+      this.$emit("clinicaEliminada");
+      this.closeModal();
     },
     closeModal() {
       this.showModal = false;
@@ -152,6 +151,6 @@ export default {
   background-color: var(--green); 
   border-color: var(--green); 
   color: var(--white);
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -39,8 +39,8 @@ export default {
     this.fetchClinicas();
   },
   methods: {
-    fetchClinicas() {
-      axios.get('http://127.0.0.1:8000/api/clinicas')
+    fetchClinicas(page = 1) {
+      axios.get(`http://127.0.0.1:8000/api/clinicas?page=${page}`)
         .then(response => {
           this.clinicas = response.data;
         })
@@ -51,13 +51,16 @@ export default {
     handleSelectClinica(clinica) {
       this.selectedClinica = clinica;
     },
-    handleClinicaEliminada(clinicaId) {
-      // Filtrar la clínica eliminada del array de clinicas
-      this.clinicas = this.clinicas.filter(clinica => clinica.id !== clinicaId);
-      // Limpiar la clínica seleccionada si coincide con la eliminada
-      if (this.selectedClinica && this.selectedClinica.id === clinicaId) {
-        this.selectedClinica = null;
+    handleClinicaEliminada() {
+      this.fetchClinicas();
+      this.selectedClinica = null;
+    },
+    handleClinicaActualizada(updatedClinica) {
+      const index = this.clinicas.data.findIndex(clinica => clinica.id === updatedClinica.id);
+      if (index !== -1) {
+        this.clinicas.data.splice(index, 1, updatedClinica);
       }
+      this.selectedClinica = null;
     },
     // Otros métodos según sea necesario
   },
