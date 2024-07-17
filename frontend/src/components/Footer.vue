@@ -1,6 +1,6 @@
 <template>
     <footer>
-      <p>&copy; {{ new Date().getFullYear() }} Clínica Veterinaria. Todos los derechos reservados.</p>
+      <p>&copy; {{ new Date().getFullYear() }} Christopher Q Mendivel</p>
     </footer>
   </template>
   

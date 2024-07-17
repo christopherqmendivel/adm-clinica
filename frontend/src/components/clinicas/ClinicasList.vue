@@ -45,7 +45,7 @@
 
 <script>
 import axios from "axios";
-import { BModal, BButton } from "bootstrap-vue-next";
+import { BModal, BButton } from 'bootstrap-vue-next'; 
 
 export default {
   name: "ClinicasList",

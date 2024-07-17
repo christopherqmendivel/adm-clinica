@@ -2,6 +2,10 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
+// Variables CSS
+import './assets/variables/variables.css'; 
+
+
 import Toast, { POSITION } from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 

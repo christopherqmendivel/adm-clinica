@@ -5,7 +5,6 @@
           <li><router-link to="/">Inicio</router-link></li>
           <li><router-link to="/clinicas">Clínicas</router-link></li>
           <li><router-link to="/empleados">Empleados</router-link></li>
-          <!-- Agrega más enlaces según las secciones de tu aplicación -->
         </ul>
       </nav>
     </header>

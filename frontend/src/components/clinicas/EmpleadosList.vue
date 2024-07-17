@@ -6,7 +6,6 @@
           <th>Nombre</th>
           <th>Correo Electrónico</th>
           <th>Teléfono</th>
-          <!-- Añade más columnas según sea necesario -->
         </tr>
       </thead>
       <tbody>
@@ -14,7 +13,6 @@
           <td>{{ empleado.nombre }}</td>
           <td>{{ empleado.correo_electronico }}</td>
           <td>{{ empleado.telefono }}</td>
-          <!-- Añade más datos según sea necesario -->
         </tr>
       </tbody>
     </table>
