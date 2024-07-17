@@ -1,32 +1,32 @@
 <template>
-    <div id="layout">
-      <Sidebar />
-      <div class="main-content">
-        <router-view />
-      </div>
+  <div id="layout">
+    <Sidebar />
+    <div class="main-content">
+      <router-view />
     </div>
-  </template>
-  
-  <script>
-  import Sidebar from './sidebar/Sidebar.vue';
-  
-  export default {
-    name:"LayoutPage",
-    components: {
-      Sidebar
-    }
-  };
-  </script>
-  
-  <style scoped>
-  #layout {
-    display: flex;
-    height: 100vh;
+  </div>
+</template>
+
+<script>
+import Sidebar from './sidebar/Sidebar.vue';
+
+export default {
+  name: "LayoutPage",
+  components: {
+    Sidebar
   }
-  
-  .main-content {
-    flex: 1;
-    padding: 20px;
-  }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+#layout {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 250px; 
+}
+</style>

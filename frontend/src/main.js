@@ -4,6 +4,7 @@ import router from './router';
 
 // Variables CSS
 import './assets/variables/variables.css'; 
+import './assets/fonts/fonts.css'; 
 
 
 import Toast, { POSITION } from 'vue-toastification';
