@@ -149,8 +149,9 @@ export default {
 }
 
 .page-item.active .page-link {
-  background-color: var(--green); /* Cambia esto al color que desees */
-  border-color: var(--green); /* Cambia esto al color que desees */
+  background-color: var(--green); 
+  border-color: var(--green); 
   color: var(--white);
+
 }
 </style>
