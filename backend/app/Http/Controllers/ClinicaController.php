@@ -12,9 +12,10 @@ class ClinicaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Clinica::all());
+        $clinicas = Clinica::paginate(5); 
+        return response()->json($clinicas);
     }
 
     /**
