@@ -35,15 +35,14 @@ export default {
   position: fixed;
   width: 250px;
   height: 100%;
-  background-color: #333;
-  color: #fff;
+  background-color: var(--gray);
 }
 
 .logo {
   padding: 20px;
   text-align: center;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--white);
 }
 
 .logo .title {
@@ -74,12 +73,12 @@ export default {
 
 .sidebar-nav ul li a {
   display: block;
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   padding: 10px;
 }
 
 .sidebar-nav ul li a:hover {
-  background-color: #555;
+  background-color: var(--hoverColor);
 }
 </style>

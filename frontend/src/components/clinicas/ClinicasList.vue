@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Listado de Clínicas</h2>
-    <table>
+    <table class="table table-dark table-hover table-striped">
       <thead>
         <tr>
           <th>Nombre</th>

@@ -27,6 +27,8 @@ export default {
 .main-content {
   flex: 1;
   padding: 20px;
-  margin-left: 250px; 
+  margin-left: 250px;
+  background-color: var(--bgColor);
+  color: var(--white);
 }
 </style>
