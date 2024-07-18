@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      // Definir una propiedad local para manejar la visibilidad del modal
+      // Define una propiedad local para manejar la visibilidad del modal
       showModalLocal: false,
     };
   },
@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     closeModal() {
-      // Emitir evento para cerrar el modal
       this.$emit('closeModal');
     },
     eliminarClinica() {

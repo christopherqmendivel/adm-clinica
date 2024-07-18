@@ -1,42 +1,54 @@
 <template>
-  <form @submit.prevent="submitForm">
-    <label>Nombre:</label>
-    <input type="text" v-model="formData.nombre" required>
+  <form @submit.prevent="submitForm" class="p-3">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre:</label>
+      <input type="text" id="nombre" v-model="formData.nombre" class="form-control" required>
+    </div>
 
-    <label>Correo Electrónico:</label>
-    <input type="email" v-model="formData.correo_electronico" required>
+    <div class="mb-3">
+      <label for="correo" class="form-label">Correo Electrónico:</label>
+      <input type="email" id="correo" v-model="formData.correo_electronico" class="form-control" required>
+    </div>
 
-    <label>Teléfono:</label>
-    <input type="tel" v-model="formData.telefono" required>
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono:</label>
+      <input type="tel" id="telefono" v-model="formData.telefono" class="form-control" required>
+    </div>
 
-    <button type="submit">Actualizar</button>
-    <button type="button" @click="closeModal">Cancelar</button>
+    <button type="submit" class="btn btn-update  me-2">Actualizar</button>
+    <button type="button" @click="closeModal" class="btn btn-secondary">Cancelar</button>
   </form>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: "ClinicaForm",
   props: {
-    clinica: Object
+    clinica: Object // Propiedad que recibe la clínica a actualizar
   },
   setup(props, { emit }) {
-    const formData = ref({ nombre: '', correo_electronico: '', telefono: '' });
+    const formData = ref({
+      nombre: props.clinica ? props.clinica.nombre : '',
+      correo_electronico: props.clinica ? props.clinica.correo_electronico : '',
+      telefono: props.clinica ? props.clinica.telefono : ''
+    });
 
-    // Si props.clinica tiene un valor, copiamos sus propiedades a formData
-    if (props.clinica) {
-      formData.value = { ...props.clinica };
-    }
-
-    const submitForm = () => {
-      emit('clinicaActualizada', formData.value);
-      closeModal();
+    const submitForm = async () => {
+      try {
+        const response = await axios.put(`http://localhost:8000/api/clinicas/${props.clinica.id}`, formData.value);
+        //console.log('Clínica actualizada:', response.data);
+        emit("clinicaActualizada", response.data); 
+        closeModal();
+      } catch (error) {
+        console.error('Error al actualizar la clínica:', error);
+      }
     };
 
     const closeModal = () => {
-      emit('closeModal'); // Emitir evento para cerrar el modal
+      emit('closeModal'); 
     };
 
     return {
@@ -48,7 +60,15 @@ export default defineComponent({
 });
 </script>
 
-
 <style scoped>
-/* Estilos específicos para el formulario */
+.btn-update {
+  background-color: var(--green);
+  color: white;
+  transition: 0.3 ease-in-out;
+}
+
+.btn-update:hover {
+  background-color: var(--greenHover);
+  color: white;
+}
 </style>

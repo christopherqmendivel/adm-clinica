@@ -1,46 +1,35 @@
-  <template>
-    <b-modal v-model="showModal" title="Actualizar Clínica" hide-footer>
-      <ClinicaForm
-        :clinica="clinica"
-        @clinicaActualizada="handleClinicaActualizada"
-        @closeModal="closeModal"
-      />
-    </b-modal>
-  </template>
-  
+<template>
+  <ClinicaForm
+    v-if="clinica"
+    :clinica="clinica"
+    @clinicaActualizada="handleClinicaActualizada"
+    @closeModal="closeModal"
+  />
+</template>
 
-  <script>
-  import { defineComponent } from 'vue'; // Importa defineComponent desde Vue 3
-  import { BModal } from 'bootstrap-vue-next'; // Importa BModal de Bootstrap Vue
-  import ClinicaForm from './ClinicaForm.vue'; // Componente que contiene el formulario
+<script>
+import { defineComponent } from 'vue';
+import ClinicaForm from './ClinicaForm.vue';
 
-  export default defineComponent({
-    name: "ClinicaUpdate",
-    components: {
-      BModal,
-      ClinicaForm,
+export default defineComponent({
+  name: "ClinicaUpdate",
+  components: {
+    ClinicaForm,
+  },
+  props: {
+    clinica: Object, // Propiedad que recibe la clínica a actualizar
+  },
+  methods: {
+    handleClinicaActualizada(updatedClinica) {
+      this.$emit("clinicaActualizada", updatedClinica); // Emitir evento con la clínica actualizada
     },
-    props: {
-      clinica: Object // Propiedad que recibe la clínica a actualizar
+    closeModal() {
+      this.$emit('closeModal'); // Emitir evento para cerrar modal en el componente padre
     },
-    data() {
-      return {
-        showModal: false // Estado local para controlar la visibilidad del modal
-      };
-    },
-    methods: {
-      handleClinicaActualizada(updatedClinica) {
-        this.$emit("clinicaActualizada", updatedClinica); // Emite evento hacia ClinicasList.vue
-        this.closeModal();
-      },
-      closeModal() {
-        this.showModal = false; // Cierra el modal estableciendo showModal en false
-        this.$emit('closeModal'); // Emite evento hacia ClinicasList.vue
-      },
-    },
-  });
-  </script>
+  },
+});
+</script>
 
-  <style scoped>
-  /* Estilos específicos para el componente */
-  </style>
+<style scoped>
+/* Estilos específicos para el componente */
+</style>

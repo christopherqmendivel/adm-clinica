@@ -51,6 +51,44 @@
       </tbody>
     </table>
 
+      <!-- Paginación -->
+      <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: !localClinicas.prev_page_url }">
+          <button
+            class="page-link"
+            @click="goToPage(localClinicas.current_page - 1)"
+            :disabled="!localClinicas.prev_page_url"
+          >
+            Anterior
+          </button>
+        </li>
+        <li v-for="page in localClinicas.last_page" :key="page" class="page-item" :class="{ active: localClinicas.current_page === page }">
+          <button class="page-link" @click="goToPage(page)">{{ page }}</button>
+        </li>
+        <li class="page-item" :class="{ disabled: !localClinicas.next_page_url }">
+          <button
+            class="page-link"
+            @click="goToPage(localClinicas.current_page + 1)"
+            :disabled="!localClinicas.next_page_url"
+          >
+            Siguiente
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+
+    <!-- Modal para actualizar clínica -->
+    <b-modal v-model="showUpdateModal" title="Actualizar Clínica" hide-footer @hide="closeModalUpdate">
+      <ClinicaUpdate
+        v-if="selectedClinica"
+        :clinica="selectedClinica"
+        @clinicaActualizada="handleClinicaActualizada"
+        @closeModal="closeModalUpdate"
+      />
+    </b-modal>
+
     <!-- Modal para eliminar clínica -->
     <b-modal v-model="showDeleteModal" title="Eliminar Clínica" hide-footer @hide="closeModalDelete">
       <ClinicaDelete
@@ -61,17 +99,7 @@
       />
     </b-modal>
 
-    <!-- Modal para actualizar clínica -->
-    <b-modal v-model="showUpdateModal" title="Actualizar Clínica" hide-footer @hide="closeModalUpdate">
-      <ClinicaUpdate
-        :clinica="selectedClinica"
-        @clinicaActualizada="handleClinicaActualizada"
-        @closeModal="closeModalUpdate"
-      />
-    </b-modal>
 
-    <!-- Paginación -->
-    <!-- ... Código de paginación ... -->
   </div>
 </template>
 
@@ -80,6 +108,9 @@ import axios from 'axios';
 import ClinicaDelete from '@/components/clinicas/ClinicaDelete.vue';
 import ClinicaUpdate from '@/components/clinicas/ClinicaUpdate.vue';
 import { BModal } from 'bootstrap-vue-next';
+
+import { useToast } from 'vue-toastification'; 
+import 'vue-toastification/dist/index.css'; 
 
 export default {
   name: 'ClinicasList',
@@ -99,7 +130,7 @@ export default {
       },
       selectedClinica: null,
       showUpdateModal: false,
-      showDeleteModal: false, // Inicializado en false para no mostrar el modal de eliminación por defecto
+      showDeleteModal: false,
     };
   },
   methods: {
@@ -115,13 +146,8 @@ export default {
 
     async eliminarClinica(idClinica) {
       try {
-        // Hacer la petición DELETE para eliminar la clínica
         await axios.delete(`http://localhost:8000/api/clinicas/${idClinica}`);
-        
-        // Actualizar la lista de clínicas después de la eliminación
         this.localClinicas.data = this.localClinicas.data.filter(clinica => clinica.id !== idClinica);
-        
-        // Cerrar el modal de eliminación
         this.closeModalDelete();
       } catch (error) {
         console.error('Error al eliminar la clínica:', error);
@@ -131,27 +157,51 @@ export default {
     async handleClinicaActualizada(updatedClinica) {
       const index = this.localClinicas.data.findIndex(clinica => clinica.id === updatedClinica.id);
       if (index !== -1) {
-        this.localClinicas.data.splice(index, 1, updatedClinica);
+        // Verificar si la clínica realmente ha cambiado
+        if (this.localClinicas.data[index].nombre !== updatedClinica.nombre ||
+            this.localClinicas.data[index].correo_electronico !== updatedClinica.correo_electronico ||
+            this.localClinicas.data[index].telefono !== updatedClinica.telefono) {
+
+          // Actualizar la clínica
+          this.localClinicas.data.splice(index, 1, updatedClinica);
+          this.showSuccessToast('Clínica actualizada correctamente'); 
+        }
       }
-      this.closeModalUpdate(); // Cerrar modal de actualización
+      this.closeModalUpdate();
     },
 
     showUpdateModalHandler(clinica) {
-      this.selectedClinica = clinica;
-      this.showUpdateModal = true; // Mostrar modal de actualización
+      // Asigna la clínica seleccionada
+      this.selectedClinica = { ...clinica };
+      this.showUpdateModal = true; 
     },
 
     showDeleteModalHandler(clinica) {
       this.selectedClinica = clinica;
-      this.showDeleteModal = true; // Mostrar modal de eliminación
+      this.showDeleteModal = true;
     },
 
     closeModalUpdate() {
-      this.showUpdateModal = false; // Cerrar modal de actualización
+      this.selectedClinica = null;
+      this.showUpdateModal = false;
     },
 
     closeModalDelete() {
-      this.showDeleteModal = false; // Cerrar modal de eliminación
+      this.showDeleteModal = false;
+    },
+
+    // Función para mostrar toast de éxito
+    showSuccessToast(message) {
+      const toast = useToast();
+      toast.success(message, {
+        position: 'top-right',
+        timeout: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        hideProgressBar: false,
+        showCloseButton: true,
+      });
     },
   },
 
@@ -162,5 +212,9 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos para el componente */
+.page-item.active button.page-link{
+  background-color: var(--green);
+  border-color: var(--green);
+}
+
 </style>
