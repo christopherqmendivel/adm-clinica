@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // Llamar a los seeders de clínicas y empleados en el orden correcto
         $this->call([
+            AdminUserSeeder::class,
             ClinicasTableSeeder::class,
             EmpleadosTableSeeder::class,
         ]);
