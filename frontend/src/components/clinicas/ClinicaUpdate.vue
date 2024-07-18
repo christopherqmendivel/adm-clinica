@@ -1,75 +1,46 @@
-<template>
-  <div>
-    <h2>Editar Clínica</h2>
-    <form @submit.prevent="updateClinica">
-      <label>Nombre:</label>
-      <input type="text" v-model="editedClinica.nombre" required>
-      <br>
-      <label>Correo Electrónico:</label>
-      <input type="email" v-model="editedClinica.correo_electronico" required>
-      <br>
-      <label>Teléfono:</label>
-      <input type="tel" v-model="editedClinica.telefono" required>
-      <br>
-      <button type="submit">Guardar Cambios</button>
-    </form>
-    <div v-if="errors.length">
-      <h3>Errores:</h3>
-      <ul>
-        <li v-for="error in errors" :key="error">{{ error }}</li>
-      </ul>
-    </div>
-  </div>
-</template>
+  <template>
+    <b-modal v-model="showModal" title="Actualizar Clínica" hide-footer>
+      <ClinicaForm
+        :clinica="clinica"
+        @clinicaActualizada="handleClinicaActualizada"
+        @closeModal="closeModal"
+      />
+    </b-modal>
+  </template>
+  
 
-<script>
-import axios from 'axios';
-import { useToast } from 'vue-toastification';
+  <script>
+  import { defineComponent } from 'vue'; // Importa defineComponent desde Vue 3
+  import { BModal } from 'bootstrap-vue-next'; // Importa BModal de Bootstrap Vue
+  import ClinicaForm from './ClinicaForm.vue'; // Componente que contiene el formulario
 
-export default {
-  name: 'ClinicaUpdate',
-  props: ['clinica'],
-  data() {
-    return {
-      editedClinica: {
-        id: this.clinica.id,
-        nombre: this.clinica.nombre,
-        correo_electronico: this.clinica.correo_electronico,
-        telefono: this.clinica.telefono,
-      },
-      errors: [],
-      toast: useToast()
-    };
-  },
-  watch: {
-    clinica(newClinica) {
-      this.editedClinica = {
-        id: newClinica.id,
-        nombre: newClinica.nombre,
-        correo_electronico: newClinica.correo_electronico,
-        telefono: newClinica.telefono,
+  export default defineComponent({
+    name: "ClinicaUpdate",
+    components: {
+      BModal,
+      ClinicaForm,
+    },
+    props: {
+      clinica: Object // Propiedad que recibe la clínica a actualizar
+    },
+    data() {
+      return {
+        showModal: false // Estado local para controlar la visibilidad del modal
       };
-    }
-  },
-  methods: {
-    updateClinica() {
-      this.errors = [];
-      axios.put(`http://127.0.0.1:8000/api/clinicas/${this.editedClinica.id}`, this.editedClinica)
-        .then(response => {
-          this.toast.success('Clínica actualizada correctamente');
-          this.$emit('clinicaActualizada', response.data);
-        })
-        .catch(error => {
-          if (error.response && error.response.data.errors) {
-            this.errors = Object.values(error.response.data.errors).flat();
-          }
-          this.toast.error('Error al actualizar la clínica');
-          console.error('Error al actualizar clínica:', error.response.data);
-        });
-    }
-  }
-};
-</script>
+    },
+    methods: {
+      handleClinicaActualizada(updatedClinica) {
+        this.$emit("clinicaActualizada", updatedClinica); // Emite evento hacia ClinicasList.vue
+        this.closeModal();
+      },
+      closeModal() {
+        this.showModal = false; // Cierra el modal estableciendo showModal en false
+        this.$emit('closeModal'); // Emite evento hacia ClinicasList.vue
+      },
+    },
+  });
+  </script>
 
-<style scoped>
-</style>
+  <style scoped>
+  /* Estilos específicos para el componente */
+  </style>

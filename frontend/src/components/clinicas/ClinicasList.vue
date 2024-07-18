@@ -2,6 +2,7 @@
   <div>
     <h2>Listado de Clínicas</h2>
     <table class="table table-dark table-hover table-striped">
+      <!-- Encabezados de la tabla -->
       <thead>
         <tr>
           <th>Nombre</th>
@@ -10,66 +11,82 @@
           <th>Acciones</th>
         </tr>
       </thead>
+      <!-- Cuerpo de la tabla -->
       <tbody>
         <tr v-for="clinica in localClinicas.data" :key="clinica.id">
           <td>{{ clinica.nombre }}</td>
           <td>{{ clinica.correo_electronico }}</td>
           <td>{{ clinica.telefono }}</td>
           <td class="d-flex buttons-crud">
-            <!-- Btn actualizar -->
-            <button type="button" @click="selectClinica(clinica)" title="Actualizar" class="btn button">
+            <!-- Botón para actualizar -->
+            <button
+              type="button"
+              @click="showUpdateModalHandler(clinica)"
+              title="Actualizar"
+              class="btn button"
+            >
               <i class="fa-regular fa-pen-to-square btn-update text-success"></i>
             </button>
 
-            <!-- Btn Eliminar -->
-            <button type="button" @click="showDeleteModal(clinica)" title="Eliminar" class="btn button">
-              <i class="fa-regular fa-trash-can text-danger"></i> 
+            <!-- Botón para eliminar -->
+            <button
+              type="button"
+              @click="showDeleteModalHandler(clinica)"
+              title="Eliminar"
+              class="btn button"
+            >
+              <i class="fa-regular fa-trash-can text-danger"></i>
             </button>
 
-            <!-- Btn Ver Empleados de la Clinica -->
+            <!-- Enlace para ver empleados de la clínica -->
             <router-link
               :to="{ name: 'EmpleadosPorClinica', params: { id: clinica.id } }"
               class="btn text-primary button"
               title="Ver Empleados"
             >
-              <i class="fa-regular fa-eye"></i> 
+              <i class="fa-regular fa-eye"></i>
             </router-link>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Paginación -->
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" :class="{ disabled: !localClinicas.prev_page_url }">
-          <button class="page-link" @click="goToPage(localClinicas.current_page - 1)" :disabled="!localClinicas.prev_page_url">Anterior</button>
-        </li>
-        <li v-for="page in localClinicas.last_page" :key="page" class="page-item" :class="{ active: localClinicas.current_page === page }">
-          <button class="page-link" @click="goToPage(page)">{{ page }}</button>
-        </li>
-        <li class="page-item" :class="{ disabled: !localClinicas.next_page_url }">
-          <button class="page-link" @click="goToPage(localClinicas.current_page + 1)" :disabled="!localClinicas.next_page_url">Siguiente</button>
-        </li>
-      </ul>
-    </nav>
+    <!-- Modal para eliminar clínica -->
+    <b-modal v-model="showDeleteModal" title="Eliminar Clínica" hide-footer @hide="closeModalDelete">
+      <ClinicaDelete
+        :showModal="true"
+        :clinica="selectedClinica"
+        @closeModal="closeModalDelete"
+        @clinicaEliminada="eliminarClinica"
+      />
+    </b-modal>
 
-    <!-- Componente de eliminación de clínica -->
-    <ClinicaDelete v-if="selectedClinica" :clinica="selectedClinica" @clinicaEliminada="handleClinicaEliminada" @closeModal="closeModal" />
+    <!-- Modal para actualizar clínica -->
+    <b-modal v-model="showUpdateModal" title="Actualizar Clínica" hide-footer @hide="closeModalUpdate">
+      <ClinicaUpdate
+        :clinica="selectedClinica"
+        @clinicaActualizada="handleClinicaActualizada"
+        @closeModal="closeModalUpdate"
+      />
+    </b-modal>
+
+    <!-- Paginación -->
+    <!-- ... Código de paginación ... -->
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import ClinicaDelete from './ClinicaDelete.vue';
+import ClinicaDelete from '@/components/clinicas/ClinicaDelete.vue';
+import ClinicaUpdate from '@/components/clinicas/ClinicaUpdate.vue';
+import { BModal } from 'bootstrap-vue-next';
 
 export default {
-  name: "ClinicasList",
+  name: 'ClinicasList',
   components: {
     ClinicaDelete,
-  },
-  props: {
-    clinicas: Array
+    ClinicaUpdate,
+    BModal,
   },
   data() {
     return {
@@ -81,20 +98,9 @@ export default {
         prev_page_url: null,
       },
       selectedClinica: null,
-      showModal: false,
+      showUpdateModal: false,
+      showDeleteModal: false, // Inicializado en false para no mostrar el modal de eliminación por defecto
     };
-  },
-  watch: {
-    clinicas: {
-      handler(newClinicas) {
-        this.localClinicas.data = newClinicas.data || [];
-        this.localClinicas.current_page = newClinicas.current_page || 1;
-        this.localClinicas.last_page = newClinicas.last_page || 1;
-        this.localClinicas.next_page_url = newClinicas.next_page_url || null;
-        this.localClinicas.prev_page_url = newClinicas.prev_page_url || null;
-      },
-      immediate: true
-    }
   },
   methods: {
     async fetchClinicas(page = 1) {
@@ -103,39 +109,52 @@ export default {
         const response = await axios.get(url);
         this.localClinicas = response.data;
       } catch (error) {
-        console.error("Error al cargar las clínicas:", error);
+        console.error('Error al cargar las clínicas:', error);
       }
     },
-    goToPage(pageOrUrl) {
-      if (typeof pageOrUrl === 'string') {
-        this.fetchClinicasFromUrl(pageOrUrl);
-      } else {
-        this.fetchClinicas(pageOrUrl);
-      }
-    },
-    async fetchClinicasFromUrl(url) {
+
+    async eliminarClinica(idClinica) {
       try {
-        const response = await axios.get(url);
-        this.localClinicas = response.data;
+        // Hacer la petición DELETE para eliminar la clínica
+        await axios.delete(`http://localhost:8000/api/clinicas/${idClinica}`);
+        
+        // Actualizar la lista de clínicas después de la eliminación
+        this.localClinicas.data = this.localClinicas.data.filter(clinica => clinica.id !== idClinica);
+        
+        // Cerrar el modal de eliminación
+        this.closeModalDelete();
       } catch (error) {
-        console.error("Error al cargar las clínicas:", error);
+        console.error('Error al eliminar la clínica:', error);
       }
     },
-    selectClinica(clinica) {
-      this.$emit("selectClinica", clinica);
+
+    async handleClinicaActualizada(updatedClinica) {
+      const index = this.localClinicas.data.findIndex(clinica => clinica.id === updatedClinica.id);
+      if (index !== -1) {
+        this.localClinicas.data.splice(index, 1, updatedClinica);
+      }
+      this.closeModalUpdate(); // Cerrar modal de actualización
     },
-    showDeleteModal(clinica) {
+
+    showUpdateModalHandler(clinica) {
       this.selectedClinica = clinica;
-      this.showModal = true;
+      this.showUpdateModal = true; // Mostrar modal de actualización
     },
-    handleClinicaEliminada() {
-      this.$emit("clinicaEliminada");
-      this.closeModal();
+
+    showDeleteModalHandler(clinica) {
+      this.selectedClinica = clinica;
+      this.showDeleteModal = true; // Mostrar modal de eliminación
     },
-    closeModal() {
-      this.showModal = false;
+
+    closeModalUpdate() {
+      this.showUpdateModal = false; // Cerrar modal de actualización
+    },
+
+    closeModalDelete() {
+      this.showDeleteModal = false; // Cerrar modal de eliminación
     },
   },
+
   mounted() {
     this.fetchClinicas();
   },
@@ -143,14 +162,5 @@ export default {
 </script>
 
 <style scoped>
-.buttons-crud .button {
-  font-size: 1.1rem;
-}
-
-.page-item.active .page-link {
-  background-color: var(--green); 
-  border-color: var(--green); 
-  color: var(--white);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+/* Estilos específicos para el componente */
 </style>

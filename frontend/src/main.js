@@ -6,15 +6,13 @@ import router from './router';
 import './assets/variables/variables.css'; 
 import './assets/fonts/fonts.css'; 
 
-
 import Toast, { POSITION } from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 
-// Importar BootstrapVue
+// Importar BootstrapVueNext
 import { BootstrapVueNext } from 'bootstrap-vue-next';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
-
 
 const app = createApp(App);
 
@@ -23,8 +21,7 @@ app.use(Toast, {
   position: POSITION.TOP_RIGHT
 });
 
-// Usar BootstrapVue
+// Usar BootstrapVueNext
 app.use(BootstrapVueNext);
-
 
 app.mount('#app');

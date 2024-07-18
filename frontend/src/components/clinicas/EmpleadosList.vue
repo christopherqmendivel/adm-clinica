@@ -31,7 +31,6 @@ export default {
     };
   },
   watch: {
-    // Monitorea cambios en clinicaId y llama a fetchEmpleados cuando cambia
     clinicaId(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.fetchEmpleados();
@@ -39,7 +38,6 @@ export default {
     }
   },
   created() {
-    // Llama a fetchEmpleados solo si clinicaId está definido inicialmente
     if (this.clinicaId) {
       this.fetchEmpleados();
     }
@@ -53,10 +51,28 @@ export default {
         .catch(error => {
           console.error('Error fetching empleados:', error);
         });
+    },
+    // Método para manejar el evento empleadoActualizado
+    actualizarEmpleado(empleadoActualizado) {
+      // Buscar el empleado en la lista y actualizarlo
+      const index = this.empleados.findIndex(emp => emp.id === empleadoActualizado.id);
+      if (index !== -1) {
+        // Actualizar el empleado en la lista
+        this.empleados.splice(index, 1, empleadoActualizado);
+      }
     }
+  },
+  // Escuchar el evento empleadoActualizado de ClinicaUpdate.vue
+  emits: ['empleadoActualizado'],
+  // Manejar el evento empleadoActualizado
+  setup(props, { onEmpleadoActualizado }) {
+    onEmpleadoActualizado((empleadoActualizado) => {
+      this.actualizarEmpleado(empleadoActualizado);
+    });
   }
 };
 </script>
+
 
 <style scoped>
 /* Estilos específicos para el componente de empleados */

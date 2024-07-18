@@ -35,7 +35,7 @@ export default {
   position: fixed;
   width: 250px;
   height: 100%;
-  background-color: var(--gray);
+  background-color: var(--grayBG);
 }
 
 .logo {
