@@ -13,7 +13,7 @@ class CreateEmpleadosTable extends Migration
             $table->string('nombre')->nullable(false);
             $table->string('apellido')-> nullable(false);
             $table->string('dni')->unique();
-            $table->foreignId('clinica_id')->constrained()->onDelete('cascade'); // <- Aquí faltaba un punto y coma
+            $table->foreignId('clinica_id')->constrained()->onDelete('cascade');
             $table->string('correo_electronico')->unique();
             $table->string('telefono');
             $table->timestamps();

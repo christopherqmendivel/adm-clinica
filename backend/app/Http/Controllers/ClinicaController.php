@@ -14,7 +14,7 @@ class ClinicaController extends Controller
      */
     public function index(Request $request)
     {
-        $clinicas = Clinica::paginate(5); 
+        $clinicas = Clinica::paginate(10); 
         return response()->json($clinicas);
     }
 

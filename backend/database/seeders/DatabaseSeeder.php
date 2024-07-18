@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Clinica;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Llamar a los seeders de clínicas y empleados en el orden correcto
+        $this->call([
+            ClinicasTableSeeder::class,
+            EmpleadosTableSeeder::class,
+        ]);
     }
 }

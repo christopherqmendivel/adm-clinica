@@ -8,14 +8,22 @@ use App\Models\Clinica;
 
 class EmpleadosTableSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        Empleado::truncate();
+        // Eliminar todos los registros de la tabla
+        Empleado::query()->delete();
 
-        $clinicas = Clinica::factory()->count(5)->create();
+        // Obtener todas las clínicas
+        $clinicas = Clinica::all();
 
+        // Generar empleados para cada clínica
         foreach ($clinicas as $clinica) {
-            Empleado::factory()->count(10)->create([
+            Empleado::factory()->count(30)->create([
                 'clinica_id' => $clinica->id,
             ]);
         }

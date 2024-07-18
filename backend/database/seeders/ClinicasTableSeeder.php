@@ -15,7 +15,10 @@ class ClinicasTableSeeder extends Seeder
      */
     public function run()
     {
-        // Genera 30 registros de prueba para clinicas
-        Clinica::factory()->count(5)->create();
+        // Eliminar todos los registros de la tabla
+        Clinica::query()->delete();
+
+        // Generar 30 registros de prueba para clínicas
+        Clinica::factory()->count(30)->create();
     }
 }
