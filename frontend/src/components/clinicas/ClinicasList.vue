@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Listado de Clínicas</h2>
     <table class="table table-dark table-hover table-striped">
       <thead>
         <tr>
@@ -92,7 +91,7 @@
 
 <script>
 import axios from 'axios';
-import FormUpdate from '@/components/clinicas/formUpdate.vue';
+import FormUpdate from '@/components/clinicas/FormUpdate.vue';
 import ClinicaDelete from '@/components/clinicas/ClinicaDelete.vue';
 import { BModal } from 'bootstrap-vue-next';
 import { useToast } from 'vue-toastification'; 

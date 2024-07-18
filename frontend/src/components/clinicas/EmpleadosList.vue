@@ -73,5 +73,4 @@ export default {
 
 
 <style scoped>
-/* Estilos específicos para el componente de empleados */
 </style>
