@@ -25,17 +25,21 @@ class ClinicaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:255',
-        ]);
+{
+    $validated = $request->validate([
+        'nombre' => 'required|string|max:255',
+        'correo_electronico' => 'required|email|max:255|unique:clinicas,correo_electronico',
+        'telefono' => 'required|string|max:255',
+    ]);
 
+    try {
         $clinica = Clinica::create($validated);
-
         return response()->json($clinica, 201);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al crear la clínica', 'message' => $e->getMessage()], 500);
     }
+}
+
 
     /**
      * Retorna la clínica específica por su ID.
