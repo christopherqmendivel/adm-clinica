@@ -71,7 +71,7 @@
     </nav>
 
     <b-modal v-model="showUpdateModal" title="Actualizar Clínica" hide-footer @hide="closeModalUpdate">
-      <ClinicaUpdate
+      <FormUpdate
         v-if="selectedClinica"
         :clinica="selectedClinica"
         @clinicaActualizada="handleClinicaActualizada"
@@ -92,8 +92,8 @@
 
 <script>
 import axios from 'axios';
+import FormUpdate from '@/components/clinicas/formUpdate.vue';
 import ClinicaDelete from '@/components/clinicas/ClinicaDelete.vue';
-import ClinicaUpdate from '@/components/clinicas/ClinicaUpdate.vue';
 import { BModal } from 'bootstrap-vue-next';
 import { useToast } from 'vue-toastification'; 
 import 'vue-toastification/dist/index.css'; 
@@ -101,8 +101,8 @@ import 'vue-toastification/dist/index.css';
 export default {
   name: 'ClinicasList',
   components: {
+    FormUpdate,
     ClinicaDelete,
-    ClinicaUpdate,
     BModal,
   },
   data() {

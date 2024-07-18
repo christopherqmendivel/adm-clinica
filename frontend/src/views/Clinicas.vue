@@ -4,14 +4,13 @@
 
     <!-- Listado de Clínicas -->
     <ClinicasList
-      :clinicas="clinicas.data"
+      :clinicas="clinicas"
       @selectClinica="handleSelectClinica"
-      @clinicaActualizada="handleClinicaActualizada"
     />
 
     <!-- Modal de Actualización de Clínica -->
     <b-modal v-model="showUpdateModal" title="Editar Clínica" hide-footer>
-      <ClinicaUpdate
+      <FormUpdate
         :clinica="selectedClinica"
         @clinicaActualizada="handleClinicaActualizada"
       />
@@ -22,21 +21,19 @@
 <script>
 import axios from 'axios';
 import ClinicasList from "@/components/clinicas/ClinicasList.vue";
-import ClinicaUpdate from '@/components/clinicas/ClinicaUpdate.vue';
+import FormUpdate from '@/components/clinicas/formUpdate.vue'; 
 import { BModal } from 'bootstrap-vue-next';
 
 export default {
   name: 'ClinicasPage',
   components: {
     ClinicasList,
-    ClinicaUpdate,
+    FormUpdate,
     BModal,
   },
   data() {
     return {
-      clinicas: {
-        data: [],
-      },
+      clinicas: [],
       selectedClinica: null,
       showUpdateModal: false,
     };
@@ -48,7 +45,7 @@ export default {
     async fetchClinicas(page = 1) {
       try {
         const response = await axios.get(`http://127.0.0.1:8000/api/clinicas?page=${page}`);
-        this.clinicas = response.data;
+        this.clinicas = response.data.data; // Asegúrate de ajustar esto según la estructura de tu respuesta
       } catch (error) {
         console.error('Error fetching clinicas:', error);
       }
@@ -58,9 +55,9 @@ export default {
       this.showUpdateModal = true;
     },
     async handleClinicaActualizada(updatedClinica) {
-      const index = this.clinicas.data.findIndex(clinica => clinica.id === updatedClinica.id);
+      const index = this.clinicas.findIndex(clinica => clinica.id === updatedClinica.id);
       if (index !== -1) {
-        this.clinicas.data.splice(index, 1, updatedClinica);
+        this.clinicas.splice(index, 1, updatedClinica);
       }
       this.selectedClinica = null;
       this.showUpdateModal = false;

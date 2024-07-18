@@ -25,7 +25,7 @@ import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
-  name: "ClinicaForm",
+  name: "FormUpdate",
   props: {
     clinica: Object // Propiedad que recibe la clínica a actualizar
   },
