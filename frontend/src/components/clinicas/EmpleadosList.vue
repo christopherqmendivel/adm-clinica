@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <table>
+    <table class="table table-dark table-hover table-striped">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -16,7 +15,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
 </template>
 
 <script>

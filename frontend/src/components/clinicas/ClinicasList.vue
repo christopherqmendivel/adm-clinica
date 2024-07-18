@@ -2,7 +2,6 @@
   <div>
     <h2>Listado de Clínicas</h2>
     <table class="table table-dark table-hover table-striped">
-      <!-- Encabezados de la tabla -->
       <thead>
         <tr>
           <th>Nombre</th>
@@ -11,14 +10,12 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <!-- Cuerpo de la tabla -->
       <tbody>
         <tr v-for="clinica in localClinicas.data" :key="clinica.id">
           <td>{{ clinica.nombre }}</td>
           <td>{{ clinica.correo_electronico }}</td>
           <td>{{ clinica.telefono }}</td>
           <td class="d-flex buttons-crud">
-            <!-- Botón para actualizar -->
             <button
               type="button"
               @click="showUpdateModalHandler(clinica)"
@@ -27,8 +24,6 @@
             >
               <i class="fa-regular fa-pen-to-square btn-update text-success"></i>
             </button>
-
-            <!-- Botón para eliminar -->
             <button
               type="button"
               @click="showDeleteModalHandler(clinica)"
@@ -37,8 +32,6 @@
             >
               <i class="fa-regular fa-trash-can text-danger"></i>
             </button>
-
-            <!-- Enlace para ver empleados de la clínica -->
             <router-link
               :to="{ name: 'EmpleadosPorClinica', params: { id: clinica.id } }"
               class="btn text-primary button"
@@ -51,8 +44,7 @@
       </tbody>
     </table>
 
-      <!-- Paginación -->
-      <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: !localClinicas.prev_page_url }">
           <button
@@ -78,8 +70,6 @@
       </ul>
     </nav>
 
-
-    <!-- Modal para actualizar clínica -->
     <b-modal v-model="showUpdateModal" title="Actualizar Clínica" hide-footer @hide="closeModalUpdate">
       <ClinicaUpdate
         v-if="selectedClinica"
@@ -89,7 +79,6 @@
       />
     </b-modal>
 
-    <!-- Modal para eliminar clínica -->
     <b-modal v-model="showDeleteModal" title="Eliminar Clínica" hide-footer @hide="closeModalDelete">
       <ClinicaDelete
         :showModal="true"
@@ -98,8 +87,6 @@
         @clinicaEliminada="eliminarClinica"
       />
     </b-modal>
-
-
   </div>
 </template>
 
@@ -108,7 +95,6 @@ import axios from 'axios';
 import ClinicaDelete from '@/components/clinicas/ClinicaDelete.vue';
 import ClinicaUpdate from '@/components/clinicas/ClinicaUpdate.vue';
 import { BModal } from 'bootstrap-vue-next';
-
 import { useToast } from 'vue-toastification'; 
 import 'vue-toastification/dist/index.css'; 
 
@@ -157,12 +143,9 @@ export default {
     async handleClinicaActualizada(updatedClinica) {
       const index = this.localClinicas.data.findIndex(clinica => clinica.id === updatedClinica.id);
       if (index !== -1) {
-        // Verificar si la clínica realmente ha cambiado
         if (this.localClinicas.data[index].nombre !== updatedClinica.nombre ||
             this.localClinicas.data[index].correo_electronico !== updatedClinica.correo_electronico ||
             this.localClinicas.data[index].telefono !== updatedClinica.telefono) {
-
-          // Actualizar la clínica
           this.localClinicas.data.splice(index, 1, updatedClinica);
           this.showSuccessToast('Clínica actualizada correctamente'); 
         }
@@ -171,7 +154,6 @@ export default {
     },
 
     showUpdateModalHandler(clinica) {
-      // Asigna la clínica seleccionada
       this.selectedClinica = { ...clinica };
       this.showUpdateModal = true; 
     },
@@ -190,7 +172,11 @@ export default {
       this.showDeleteModal = false;
     },
 
-    // Función para mostrar toast de éxito
+    goToPage(page) {
+      if (page < 1 || page > this.localClinicas.last_page) return;
+      this.fetchClinicas(page);
+    },
+
     showSuccessToast(message) {
       const toast = useToast();
       toast.success(message, {
@@ -212,9 +198,8 @@ export default {
 </script>
 
 <style scoped>
-.page-item.active button.page-link{
+.page-item.active button.page-link {
   background-color: var(--green);
   border-color: var(--green);
 }
-
 </style>

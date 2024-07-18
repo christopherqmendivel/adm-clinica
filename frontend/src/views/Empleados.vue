@@ -1,5 +1,4 @@
 <template>
-  <div>
     <h1>Empleados</h1>
     <table>
       <thead>
@@ -21,7 +20,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
 </template>
 
 <script>

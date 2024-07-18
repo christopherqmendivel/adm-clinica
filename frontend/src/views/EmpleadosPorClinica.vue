@@ -1,11 +1,24 @@
 <template>
   <div>
     <h1 v-if="clinica">Clinica: {{ clinica.nombre }}</h1>
-    <ul v-if="empleados.length > 0">
-      <li v-for="empleado in empleados" :key="empleado.id">
-        {{ empleado.nombre }} - {{ empleado.apellido }} - {{ empleado.correo_electronico }} - {{ empleado.telefono }}
-      </li>
-    </ul>
+    <table v-if="empleados.length > 0" class="table table-dark table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo Electrónico</th>
+          <th>Teléfono</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="empleado in empleados" :key="empleado.id">
+          <td>{{ empleado.nombre }}</td>
+          <td>{{ empleado.apellido }}</td>
+          <td>{{ empleado.correo_electronico }}</td>
+          <td>{{ empleado.telefono }}</td>
+        </tr>
+      </tbody>
+    </table>
     <p v-else>No hay empleados registrados.</p>
   </div>
 </template>

@@ -9,7 +9,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import ClinicaForm from './ClinicaForm.vue';
+import ClinicaForm from './formUpdate.vue';
 
 export default defineComponent({
   name: "ClinicaUpdate",
