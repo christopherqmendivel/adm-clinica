@@ -16,7 +16,7 @@ Este proyecto es un sistema de administración para clínicas que incluye un bac
 ```bash
 
 ### Clonar el Repositorio
-git clone https://github.com/tu-usuario/adm-clinica.git
+git clone [https://github.com/tu-usuario/adm-clinica.git](https://github.com/christopherqmendivel/adm-clinica.git)
 
 ### Configurar el archivo .env (Laravel) en admin-clinica/backend
 cp .env.example .env
