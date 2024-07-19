@@ -21,15 +21,14 @@ export async function login(email, password) {
   }
 }
 
-export function logout() {
+export async function logout() {
   return fetch('http://localhost:8000/api/logout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     credentials: 'include' // Enviar cookies con la solicitud
-  })
-  .then(() => {
+  }).then(() => {
     localStorage.removeItem('user'); 
   });
 }

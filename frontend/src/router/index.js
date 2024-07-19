@@ -3,13 +3,14 @@ import LayoutPage from '../components/Layout.vue';
 import ClinicasPage from '../views/Clinicas.vue';
 import EmpleadosPorClinica from '../views/EmpleadosPorClinica.vue';
 import Empleados from '../views/Empleados.vue';
-import Login from '../views/LoginPage.vue';
 import { isLoggedIn } from '../services/authService';
+import LoginPage from '../views/LoginPage.vue';
 
 const routes = [
   {
     path: '/',
-    component: Login,
+    name: 'LoginPage',
+    component: LoginPage,
     meta: { requiresAuth: false }
   },
   {
