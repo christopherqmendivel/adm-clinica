@@ -13,10 +13,17 @@ class EmpleadoController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Devuelve todos los empleados en formato JSON
-        return response()->json(Empleado::all(), 200);
+        // Configura la paginación
+        $perPage = $request->input('per_page', 10); 
+        $currentPage = $request->input('page', 1);
+        
+        // Obtiene los empleados paginados
+        $empleados = Empleado::paginate($perPage);
+
+        // Devuelve la respuesta en formato JSON
+        return response()->json($empleados, 200);
     }
 
     /**
