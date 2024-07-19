@@ -15,6 +15,8 @@
           <td>{{ clinica.correo_electronico }}</td>
           <td>{{ clinica.telefono }}</td>
           <td class="d-flex buttons-crud">
+
+            <!-- Botón Actualizar -->
             <button
               type="button"
               @click="showUpdateModalHandler(clinica)"
@@ -23,6 +25,16 @@
             >
               <i class="fa-regular fa-pen-to-square btn-update text-success"></i>
             </button>
+
+            <router-link
+              :to="{ name: 'EmpleadosPorClinica', params: { id: clinica.id } }"
+              class="btn text-primary button"
+              title="Ver Empleados"
+            >
+              <i class="fa-regular fa-eye"></i>
+            </router-link>
+
+             <!-- Botón Eliminar -->
             <button
               type="button"
               @click="showDeleteModalHandler(clinica)"
@@ -31,13 +43,7 @@
             >
               <i class="fa-regular fa-trash-can text-danger"></i>
             </button>
-            <router-link
-              :to="{ name: 'EmpleadosPorClinica', params: { id: clinica.id } }"
-              class="btn text-primary button"
-              title="Ver Empleados"
-            >
-              <i class="fa-regular fa-eye"></i>
-            </router-link>
+           
           </td>
         </tr>
       </tbody>

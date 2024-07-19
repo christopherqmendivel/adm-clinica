@@ -1,33 +1,38 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LayoutPage from '../components/Layout.vue';
-import ClinicasPage from '../views/Clinicas.vue';
-import EmpleadosPorClinica from '../views/EmpleadosPorClinica.vue';
-import Empleados from '../views/Empleados.vue';
-import { isLoggedIn } from '../services/authService';
-import LoginPage from '../views/LoginPage.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import LayoutPage from "../components/Layout.vue";
+import ClinicasPage from "../views/Clinicas.vue";
+import EmpleadosPorClinica from "../views/EmpleadosPorClinica.vue";
+import Empleados from "../views/Empleados.vue";
+import { isLoggedIn } from "../services/authService";
+import LoginPage from "../views/LoginPage.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'LoginPage',
+    path: "/",
+    name: "LoginPage",
     component: LoginPage,
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false },
   },
   {
-    path: '/clinicas',
+    path: "/clinicas",
     component: LayoutPage,
     meta: { requiresAuth: true },
     children: [
-      { path: '', component: ClinicasPage },
-      { path: '/clinicas/:id/empleados', name: 'EmpleadosPorClinica', component: EmpleadosPorClinica, props: true },
-      { path: '/empleados', component: Empleados }
-    ]
-  }
+      { path: "", component: ClinicasPage },
+      {
+        path: "/clinicas/:id/empleados",
+        name: "EmpleadosPorClinica",
+        component: EmpleadosPorClinica,
+        props: true,
+      },
+      { path: "/empleados", component: Empleados },
+    ],
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -35,9 +40,9 @@ router.beforeEach((to, from, next) => {
   const loggedIn = isLoggedIn();
 
   if (requiresAuth && !loggedIn) {
-    next('/'); // Redirigir a la página de login si no está autenticado
-  } else if (to.path === '/' && loggedIn) {
-    next('/clinicas'); // Redirigir a la página de clínicas si ya está autenticado
+    next("/"); // Redirigir a la página de login si no está autenticado
+  } else if (to.path === "/" && loggedIn) {
+    next("/clinicas"); // Redirigir a la página de clínicas si ya está autenticado
   } else {
     next();
   }
