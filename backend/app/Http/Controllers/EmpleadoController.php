@@ -9,35 +9,25 @@ use App\Models\Clinica;
 class EmpleadoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all employees.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        // Devuelve todos los empleados como JSON
-        return response()->json(Empleado::all());
+        // Devuelve todos los empleados en formato JSON
+        return response()->json(Empleado::all(), 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $clinicas = Clinica::all();
-        return view('empleados.create', compact('clinicas'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created employee in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
+        // Valida los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
@@ -47,43 +37,38 @@ class EmpleadoController extends Controller
             'telefono' => 'required|string|max:255',
         ]);
 
-        Empleado::create($validated);
 
-        return redirect()->route('empleados.index')->with('success', 'Empleado creado exitosamente.');
+        $validated['clinica_id'] = $request->input('clinica_id');
+
+        // Crea el nuevo empleado
+        $empleado = Empleado::create($validated);
+
+        // Devuelve el empleado creado con código de estado 201 (Creado)
+        return response()->json($empleado, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified employee.
      *
      * @param  Empleado  $empleado
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Empleado $empleado)
     {
-        return view('empleados.show', compact('empleado'));
+        // Devuelve el empleado especificado en formato JSON
+        return response()->json($empleado, 200);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Empleado  $empleado
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Empleado $empleado)
-    {
-        $clinicas = Clinica::all();
-        return view('empleados.edit', compact('empleado', 'clinicas'));
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update the specified employee in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  Empleado  $empleado
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Empleado $empleado)
     {
+        // Valida los datos recibidos
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
@@ -93,41 +78,42 @@ class EmpleadoController extends Controller
             'telefono' => 'required|string|max:255',
         ]);
 
+        // Actualiza el empleado con los datos validados
         $empleado->update($validated);
 
-        return redirect()->route('empleados.index')->with('success', 'Empleado actualizado exitosamente.');
+        // Devuelve el empleado actualizado
+        return response()->json($empleado, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified employee from storage.
      *
      * @param  Empleado  $empleado
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Empleado $empleado)
     {
         $empleado->delete();
-
-        return redirect()->route('empleados.index')
-            ->with('success', 'Empleado eliminado exitosamente.');
+        return response()->json(['message' => 'Empleado eliminado exitosamente.'], 200);
     }
 
     /**
-     * Retorna los empleados asociados a una clínica específica.
+     * Retrieve employees associated with a specific clinic.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function empleadosPorClinica($id)
+    public function empleadosPorClinica($id, Request $request)
     {
         try {
-            // Obtener la clínica y sus empleados relacionados
             $clinica = Clinica::findOrFail($id);
-            $empleados = $clinica->empleados()->get(); 
 
-            return response()->json($empleados);
+            // Obtiene los empleados asociados a la clínica con paginación
+            $empleados = $clinica->empleados()->paginate(10); // Pagina con 10 empleados por página
+            return response()->json($empleados, 200);
+            
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error fetching employees: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al obtener empleados: ' . $e->getMessage()], 500);
         }
     }
 }

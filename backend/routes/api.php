@@ -44,3 +44,6 @@ Route::post('/empleados', [EmpleadoController::class, 'store']);
 Route::get('/empleados/{id}', [EmpleadoController::class, 'show']);
 Route::put('/empleados/{id}', [EmpleadoController::class, 'update']);
 Route::delete('/empleados/{id}', [EmpleadoController::class, 'destroy']);
+
+// Ruta para crear empleados dentro de una clínica específica
+Route::post('/clinicas/{clinica}/empleados', [EmpleadoController::class, 'store']);

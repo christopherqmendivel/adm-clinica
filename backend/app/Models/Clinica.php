@@ -14,4 +14,5 @@ class Clinica extends Model
     public function empleados() {
         return $this->hasMany(Empleado::class);
     }
+    
 }

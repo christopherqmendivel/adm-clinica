@@ -14,7 +14,7 @@ class ClinicaController extends Controller
      */
     public function index(Request $request)
     {
-        $clinicas = Clinica::paginate(10); 
+        $clinicas = Clinica::paginate(10);
         return response()->json($clinicas);
     }
 
@@ -25,20 +25,20 @@ class ClinicaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'nombre' => 'required|string|max:255',
-        'correo_electronico' => 'required|email|max:255|unique:clinicas,correo_electronico',
-        'telefono' => 'required|string|max:255',
-    ]);
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'correo_electronico' => 'required|email|max:255|unique:clinicas,correo_electronico',
+            'telefono' => 'required|string|max:255',
+        ]);
 
-    try {
-        $clinica = Clinica::create($validated);
-        return response()->json($clinica, 201);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al crear la clínica', 'message' => $e->getMessage()], 500);
+        try {
+            $clinica = Clinica::create($validated);
+            return response()->json($clinica, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al crear la clínica', 'message' => $e->getMessage()], 500);
+        }
     }
-}
 
 
     /**
@@ -81,32 +81,27 @@ class ClinicaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-{
-    try {
-        $clinica = Clinica::findOrFail($id);
-        $clinica->delete();
-
-        return response()->json(['message' => 'Clinica eliminada exitosamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar la clínica'], 500);
-    }
-}
-
-
-    public function empleadosPorClinica($id)
     {
         try {
-            // Encuentra la clínica por su ID
             $clinica = Clinica::findOrFail($id);
+            $clinica->delete();
 
-            // Obtiene todos los empleados de la clínica
-            $empleados = $clinica->empleados()->get();
-
-            // Retorna los empleados como respuesta JSON
-            return response()->json($empleados);
+            return response()->json(['message' => 'Clinica eliminada exitosamente']);
         } catch (\Exception $e) {
-            // Manejo de errores: retorna una respuesta JSON con estado 500 si hay un error
-            return response()->json(['error' => 'Error al obtener empleados'], 500);
+            return response()->json(['error' => 'Error al eliminar la clínica'], 500);
         }
+    }
+
+
+    public function empleadosPorClinica($id, Request $request)
+    {
+        $clinica = Clinica::find($id);
+        if (!$clinica) {
+            return response()->json(['error' => 'Clínica no encontrada.'], 404);
+        }
+
+        $empleados = $clinica->empleados()->paginate(10); 
+
+        return response()->json($empleados);
     }
 }
