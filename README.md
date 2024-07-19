@@ -13,21 +13,35 @@ Este proyecto es un sistema de administración para clínicas que incluye un bac
 
 ### Clonar el Repositorio
 git clone https://github.com/tu-usuario/adm-clinica.git
-cd adm-clinica
 
 
 ### Instalación del Backend (Laravel)
-cd backend
+cd adm-clinica/backend
 composer install
 
-### Configuración del Backend
+### Configurar el archivo .env (Laravel)
 cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=veterinariaejemplo
+DB_USERNAME=root
+DB_PASSWORD=
+
+CREATE DATABASE veterinariaejemplo;
+
+
+### Ejecutar las Migraciones
+php artisan migrate
+
+### Ejecutar los Seeders
+php artisan db:seed
+
 
 
 ## Instalación del Frontend (Vue.js)
-cd frontend
+cd adm-clinica/frontend
 npm install
 
 
