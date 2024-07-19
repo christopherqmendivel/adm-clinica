@@ -2,6 +2,10 @@
 
 Este proyecto es un sistema de administración para clínicas que incluye un backend desarrollado en Laravel y un frontend en Vue.js.
 
+
+## Diseño
+![Dashboard](frontend/img/design/dashboard.png)
+
 ## Estructura del Proyecto
 
 - `backend/`: Contiene el código del backend desarrollado en Laravel.
