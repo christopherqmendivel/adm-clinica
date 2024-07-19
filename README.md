@@ -4,7 +4,7 @@ Este proyecto es un sistema de administración para clínicas que incluye un bac
 
 
 ## Diseño
-![Dashboard](frontend/img/design/dashboard.png)
+![Dashboard](./frontend/src/assets/img/design/dashboard.png)
 
 ## Estructura del Proyecto
 
